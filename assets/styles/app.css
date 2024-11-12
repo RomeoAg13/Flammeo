@@ -91,3 +91,10 @@ nav ul li:first-child a {
         margin-bottom: 0;
     }
 }
+
+footer {
+    background-color: #333;
+    color: #f7f7f7;
+    text-align: center;
+    margin-top: auto;
+}
