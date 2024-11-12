@@ -11,11 +11,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'product_list')]
-    public function index(ProductRepository $productRepository): Response
+    #[Route('/', name: 'homepage')]
+    public function homepage(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();
-        return $this->render('product/index.html.twig', [
+        return $this->render('homepage/index.html.twig', [
             'controller_name' => 'ProductController',
             'products' => $products
         ]);
@@ -83,17 +83,6 @@ class ProductController extends AbstractController
 
     #[Route('/cart', name: 'cart_list')]
     public function cart(ProductRepository $productRepository): Response
-    {
-        $products = $productRepository->findAll();
-        return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $products
-        ]);
-    }
-
-
-    #[Route('/', name: 'homepage')]
-    public function homepage(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();
         return $this->render('product/index.html.twig', [
