@@ -1,3 +1,93 @@
+/* Réinitialisation des marges et paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corps de la page */
 body {
-    background-color: skyblue;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* Style de l'en-tête */
+header {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+/* Style du menu de navigation */
+nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+/* Style de chaque élément de menu */
+nav ul li {
+    margin: 0 20px;
+}
+
+/* Style des liens */
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* Effet au survol des liens */
+nav ul li a:hover {
+    color: #ff6347;
+}
+
+/* Ajout d'un sous-ligne animée lors du survol */
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ff6347;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+nav ul li a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* Style du logo */
+nav ul li:first-child a {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: none;
+}
+
+/* Responsivité : menu mobile */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 20px;
+    }
+
+    nav ul li {
+        margin-bottom: 10px;
+    }
+
+    nav ul li:last-child {
+        margin-bottom: 0;
+    }
 }

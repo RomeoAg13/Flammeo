@@ -70,4 +70,55 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('product_list');
     }
 
+
+    #[Route('/products', name: 'all_product_list')]
+    public function allProducts(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products
+        ]);
+    }
+
+    #[Route('/cart', name: 'cart_list')]
+    public function cart(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products
+        ]);
+    }
+
+
+    #[Route('/', name: 'homepage')]
+    public function homepage(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products
+        ]);
+    }
+
+    #[Route('/login', name: 'login')]
+    public function login(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products
+        ]);
+    }
+
+    #[Route('/register', name: 'register')]
+    public function register(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findAll();
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'products' => $products
+        ]);
+    }
 }
