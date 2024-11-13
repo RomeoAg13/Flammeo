@@ -98,3 +98,111 @@ footer {
     text-align: center;
     margin-top: auto;
 }
+
+
+
+
+/*HOMEPAGE*/
+.example-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    max-width: 1235px;
+    padding: 20px;
+}
+
+.example-wrapper h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* Conteneur des cartes */
+.example-wrapper ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+/* Style de chaque carte */
+.example-wrapper li {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 220px;
+    max-width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.example-wrapper li:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Style pour l'image */
+.example-wrapper li img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    transition: transform 0.3s ease;
+}
+
+.example-wrapper li:hover img {
+    transform: scale(1.05);
+}
+
+/* Nom du produit */
+.example-wrapper li .product-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 15px;
+    padding: 5px 0;
+}
+
+#logo{
+    width: 25%;
+}
+
+.white-filter {
+    filter: brightness(0) invert(1) brightness(2);
+    width: 50px; /* Adjust width as needed */
+    height: auto;
+}
+/* Prix du produit */
+.example-wrapper li .product-price {
+    font-size: 1rem;
+    color: #28a745;
+    font-weight: 500;
+    padding: 10px 0 20px;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    .example-wrapper ul {
+        gap: 15px;
+    }
+    .example-wrapper li {
+        width: 180px;
+    }
+    .example-wrapper h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .example-wrapper li {
+        width: 100%;
+        max-width: 90%;
+    }
+}
