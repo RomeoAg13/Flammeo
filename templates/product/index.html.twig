@@ -10,12 +10,12 @@
     <div class="example-wrapper">
         <h1>All of our Games</h1>
 
-        <ul>
+        <ul class="product-card">
             {% for product in products %}
                 <li>
                     <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
                     <div class="product-name">{{ product.getName() }}</div>
-                    <div class="product-price">{{ product.getPrice() }}</div>
+                    <div class="product-price">{{ product.getPrice() }}€</div>
                     <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn-primary">
                         Add to cart
                     </a>

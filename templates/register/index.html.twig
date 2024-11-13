@@ -15,6 +15,7 @@
         .exemple-wrapper {
             justify-content: center;
             display: flex;
+            margin-top:30px;
         }
 
         /* Style du formulaire */
@@ -58,19 +59,7 @@
             box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
         }
 
-        /* Style du bouton de soumission */
-        button {
-            width: 100%;
-            padding: 12px;
-            font-size: 1.1rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-weight: bold;
-        }
+        
 
         /* Effet au survol et au clic du bouton */
         button:hover {
@@ -83,16 +72,15 @@
     </style>
 
 
-    <h1>Créer un nouvel utilisateur</h1>
 
     <div class="exemple-wrapper">
         {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.password) }}
+        {{ form_row(form.name, {'attr': {'placeholder': 'Enter your name'}}) }}
+        {{ form_row(form.email, {'attr': {'placeholder': 'Enter your email'}}) }}
+        {{ form_row(form.password, {'attr': {'placeholder': 'Enter your password'}}) }}
 
-        <button type="submit">Créer</button>
-            {{ form_end(form) }}
+        <button type="submit" class="btn-custom">REGISTER</button>
+        {{ form_end(form) }}
     </div>
 
 {% endblock %}
