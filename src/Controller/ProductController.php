@@ -95,19 +95,10 @@ class ProductController extends AbstractController
     public function login(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();
-        return $this->render('product/index.html.twig', [
+        return $this->render('login/index.html.twig', [
             'controller_name' => 'ProductController',
             'products' => $products
         ]);
     }
 
-    #[Route('/register', name: 'register')]
-    public function register(ProductRepository $productRepository): Response
-    {
-        $products = $productRepository->findAll();
-        return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $products
-        ]);
-    }
 }

@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+    <style>
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .exemple-wrapper {
+            justify-content: center;
+            display: flex;
+        }
+
+        /* Style du formulaire */
+        form {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+
+        /* Espacement entre les éléments du formulaire */
+        form div {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Effet focus pour les champs de saisie */
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Style du bouton de soumission */
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+
+        /* Effet au survol et au clic du bouton */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+
+
+    <h1>Créer un nouvel utilisateur</h1>
+
+    <div class="exemple-wrapper">
+        {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+
+        <button type="submit">Créer</button>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
