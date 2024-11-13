@@ -16,7 +16,7 @@
                 <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
                 <div class="product-name">{{ product.getName() }}</div>
                 <div class="product-price">{{ product.getPrice() }}</div>
-                <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn-primary">
+                <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn btn-primary">
                     Add to cart
                 </a>
             </li>

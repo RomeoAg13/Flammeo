@@ -19,11 +19,9 @@
                         <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
                         <div class="product-name">{{ product.getName() }}</div>
                         <div class="product-price">{{ product.getPrice() }}</div>
-                        <a href="{{ path('cart_remove', {id: product.getId()}) }}" class="btn-remove">Remove this item</a>
                     </li>
                 {% endfor %}
             </ul>
-            <a href="https://www.paypal.com/fr/home" class="btn-pay">Pay</a>
         {% endif %}
     </div>
 
