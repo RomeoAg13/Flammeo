@@ -97,17 +97,7 @@ class ProductController extends AbstractController
             'totalPrice' => $totalPrice
         ]);
     }
-
-    #[Route('/login', name: 'login')]
-    public function login(ProductRepository $productRepository): Response
-    {
-        $products = $productRepository->findAll();
-        return $this->render('login/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $products
-        ]);
-    }
-
+    
     #[Route('/cart/add/{id}', name: 'cart_add')]
     public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
     {
