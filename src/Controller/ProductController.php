@@ -118,4 +118,14 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('cart_list');
     }
 
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    public function removeFromCart(int $id, SessionInterface $session): Response
+    {
+        $cart = $session->get('cart', []);
+        if (($key = array_search($id, $cart)) !== false) {
+            unset($cart[$key]);
+        }
+        $session->set('cart', array_values($cart));
+        return $this->redirectToRoute('cart_list');
+    }
 }
