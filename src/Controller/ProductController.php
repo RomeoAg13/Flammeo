@@ -87,9 +87,14 @@ class ProductController extends AbstractController
     {
         $cart = $session->get('cart', []);
         $products = $productRepository->findBy(['id' => $cart]);
+        $totalPrice = 0;
+        foreach ($products as $product) {
+            $totalPrice += $product->getPrice();
+        }
         return $this->render('cart/index.html.twig', [
             'controller_name' => 'ProductController',
-            'products' => $products
+            'products' => $products,
+            'totalPrice' => $totalPrice
         ]);
     }
 
