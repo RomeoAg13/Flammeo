@@ -47,7 +47,7 @@ class UserController extends AbstractController
     {
         return $this->render('register/success.html.twig');
     }
-    
+
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
@@ -59,16 +59,19 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($user);
-            $entityManager->flush(); 
+            $entityManager->flush();
             return $this->redirectToRoute('login_success');
         }
-        
-        
+        else {
+            $this->addFlash('error', 'Erreur lors de la soumission du formulaire. Veuillez vérifier les informations.');
+        }
+
+
         return $this->render('login/index.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
-        
+
     }
     
     #[Route('/login_success', name: 'login_success')]
