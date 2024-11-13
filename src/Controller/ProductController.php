@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends AbstractController
 {
@@ -82,10 +83,11 @@ class ProductController extends AbstractController
     }
 
     #[Route('/cart', name: 'cart_list')]
-    public function cart(ProductRepository $productRepository): Response
+    public function cart(ProductRepository $productRepository, SessionInterface $session): Response
     {
-        $products = $productRepository->findAll();
-        return $this->render('product/index.html.twig', [
+        $cart = $session->get('cart', []);
+        $products = $productRepository->findBy(['id' => $cart]);
+        return $this->render('cart/index.html.twig', [
             'controller_name' => 'ProductController',
             'products' => $products
         ]);
@@ -101,4 +103,29 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[Route('/cart/add/{id}', name: 'cart_add')]
+    public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
+    {
+        $product = $productRepository->find($id);
+        if (!$product) {
+            throw $this->createNotFoundException("The product doesn't exists");
+        }
+        $cart = $session->get('cart', []);
+        if (!in_array($id, $cart)) {
+            $cart[] = $id;
+        }
+        $session->set('cart', $cart);
+        return $this->redirectToRoute('cart_list');
+    }
+
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    public function removeFromCart(int $id, SessionInterface $session): Response
+    {
+        $cart = $session->get('cart', []);
+        if (($key = array_search($id, $cart)) !== false) {
+            unset($cart[$key]);
+        }
+        $session->set('cart', array_values($cart));
+        return $this->redirectToRoute('cart_list');
+    }
 }
