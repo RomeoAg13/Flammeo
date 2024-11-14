@@ -14,7 +14,7 @@ class JwtToken
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 1024)]
     private ?string $token = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

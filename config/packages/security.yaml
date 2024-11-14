@@ -1,25 +1,33 @@
 security:
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        algorithm: bcrypt
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
-        users_in_memory: { memory: null }
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        login:
+            pattern: ^/login
+            stateless: true
+
         api:
             pattern: ^/api
             stateless: true
             custom_authenticators:
                 - App\Security\JwtAuthenticator
-            provider: app_user_provider  
+            provider: app_user_provider
         main:
-            lazy: true
-            provider: users_in_memory
+            pattern: ^/homepage
+            stateless: true
+            custom_authenticators:
+                - App\Security\JwtAuthenticator
+
     access_control:
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
