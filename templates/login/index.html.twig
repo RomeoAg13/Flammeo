@@ -71,7 +71,7 @@
 
     <div class="example-wrapper">
         <h1>Login</h1>
-        <form method="post" action="{{ path('login') }}">
+        <form method="post" action="{{ path('login_success') }}" data-turbo="false">
             <div class="form-group">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="_username" value="{{ last_username }}" required />
