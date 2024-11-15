@@ -18,9 +18,9 @@
         <ul>
             <li><a href="/"><img id="logo" class="white-filter" src="{{ asset('images/image.png') }}"></a></li>
             <li><a href="/products">All products</a></li>
-            <li><a href="/app/cart">Cart</a></li>
+            <li><a href="{{ token ? '/cart' : '/app/cart' }}">Cart</a></li>
 
-            {% if app.user %}
+            {% if token %}
                 <li>Welcome, {{ app.user.email }}</li>
                 <li><a href="{{ path('app_logout') }}">Logout</a></li>
             {% else %}

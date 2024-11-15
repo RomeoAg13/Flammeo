@@ -13,12 +13,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function homepage(ProductRepository $productRepository): Response
+    public function homepage(ProductRepository $productRepository, Request $request): Response
     {
         //recuperer le token depuis le header... 
+        $token = $request->headers->get('token');
         $products = $productRepository->findAll();
         return $this->render('homepage/index.html.twig', [
             'controller_name' => 'ProductController',
+            'token' => $token,
             'products' => $products
         ]);
     }
