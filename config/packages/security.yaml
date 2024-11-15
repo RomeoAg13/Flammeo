@@ -17,17 +17,15 @@ security:
             pattern: ^/login
             stateless: true
 
-        api:
-            pattern: ^/api
+        home:
+            pattern: ^/home
             stateless: true
-            custom_authenticators:
-                - App\Security\JwtAuthenticator
-            provider: app_user_provider
-        main:
-            pattern: ^/homepage
+
+        app:
+            pattern: ^/app
             stateless: true
             custom_authenticators:
                 - App\Security\JwtAuthenticator
 
     access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/app, roles: IS_AUTHENTICATED_FULLY }

@@ -38,7 +38,6 @@ class JwtAuthenticator extends AbstractAuthenticator
         $token = substr($authHeader, 7);
 
         $parsedToken = $this->jwtService->parseToken($token);
-
         if (!$parsedToken) {
             throw new AuthenticationException('Token JWT invalide ou expiré.');
         }

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'homepage')]
+    #[Route('/home', name: 'homepage')]
     public function homepage(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();

@@ -17,29 +17,36 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     #[Route('/register', name: 'user_new')]
-    public function new(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
-    ): Response {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+public function new(
+    Request $request,
+    EntityManagerInterface $entityManager,
+    UserPasswordHasherInterface $passwordHasher
+): Response {
+    $user = new User();
+    $form = $this->createForm(UserType::class, $user);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('register_success');
+    if ($form->isSubmitted() && $form->isValid()) {
+        $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]);
+        if ($existingUser) {
+            $this->addFlash('error', 'Email already in use.');
+            return $this->redirectToRoute('user_new');
         }
 
-        return $this->render('register/index.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+        $user->setPassword($hashedPassword);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('register_success');
     }
+
+    return $this->render('register/index.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/register_success', name: 'register_success')]
     public function success(): Response
@@ -50,40 +57,26 @@ class UserController extends AbstractController
     #[Route('/login', name: 'login_form', methods: ['GET'])]
     public function loginForm(): Response
     {
-        return $this->render('login/index.html.twig'); // Formulaire de connexion
+        return $this->render('login/index.html.twig'); 
     }
 
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordEncoder, JwtService $jwtService, EntityManagerInterface $em): Response {
-        $data = json_decode($request->getContent(), true);  // Ici, tu essaies de décoder un JSON
         $email = $request->request->get('email');
         $password = $request->request->get('password');
         $user = $userRepository->findOneBy(['email' => $email]);
 
-
-        if (!$user || !$passwordEncoder->isPasswordValid($user, $password)) {
-            dump('Invalid credentials');
-            return new JsonResponse(['error' => 'Invalid credentials.'], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-        
-
-        // Generate JWT
-        $token = $jwtService->createToken($user);
-        $tokenString = $token->toString();
-        $expiresAt = $token->claims()->get('exp');
-
-        // Store JWT in the database
-        $jwtToken = new JwtToken();
-        $jwtToken->setToken($tokenString);
-        $jwtToken->setExpiresAt($expiresAt);
-        $jwtToken->setUser($user);
-
-        $em->persist($jwtToken);
-        $em->flush();
-
-        return $this->redirectToRoute('login_success');
+    if (!$user || !$passwordEncoder->isPasswordValid($user, $password)) {
+        return new JsonResponse(['error' => 'Invalid credentials.'], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
+    $token = $jwtService->createToken($user);
+    $tokenString = $token->toString();
+
+    $request->headers->set('Authorization', 'Bearer ' . $tokenString);
+
+    return $this->redirectToRoute('homepage');
+}
 
     #[Route('/login_success', name: 'login_success')]
     public function log_success(): Response
@@ -91,25 +84,45 @@ class UserController extends AbstractController
         return $this->render('login/success.html.twig');
     }
 
-    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
-    public function logout(
-        Request $request,
-        EntityManagerInterface $em
-    ): JsonResponse {
+    #[Route('/logout', name: 'logout_form', methods: ['GET'])]
+    public function logoutForm(): Response
+    {
+        return $this->redirectToRoute('login_form');
+    }
+    #[Route('/logout', name: 'logout', methods: ['POST'])]
+    public function logout(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        // Vérifier si un en-tête Authorization est présent
         $authHeader = $request->headers->get('Authorization');
-
+        
+        // Si l'en-tête est absent ou ne commence pas par 'Bearer ', retourner une erreur
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return new JsonResponse(['error' => 'Token not provided.'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Token not provided or invalid.'], JsonResponse::HTTP_BAD_REQUEST);
         }
-
-        $tokenString = substr($authHeader, 7);
+    
+        // Extraire le token du header 'Authorization'
+        $tokenString = substr($authHeader, 7); // 'Bearer ' fait 7 caractères
+    
+        // Rechercher le token dans la base de données
         $jwtToken = $em->getRepository(JwtToken::class)->findOneBy(['token' => $tokenString]);
-
+    
+        // Si le token est trouvé, le supprimer
         if ($jwtToken) {
             $em->remove($jwtToken);
             $em->flush();
+            
+            return new JsonResponse(['message' => 'Successfully logged out.'], JsonResponse::HTTP_OK);
+        } else {
+            // Si aucun token trouvé, retourner une erreur
+            return new JsonResponse(['error' => 'Token not found in the database.'], JsonResponse::HTTP_NOT_FOUND);
         }
+    
+    
 
-        return new JsonResponse(['message' => 'Successfully logged out.']);
-    }
+    return new JsonResponse(['message' => 'Successfully logged out.'], JsonResponse::HTTP_OK);
 }
+
+
+}
+
+
