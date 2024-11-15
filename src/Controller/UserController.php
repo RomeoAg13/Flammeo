@@ -92,28 +92,21 @@ public function new(
     #[Route('/logout', name: 'logout', methods: ['POST'])]
     public function logout(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        // Vérifier si un en-tête Authorization est présent
         $authHeader = $request->headers->get('Authorization');
-        
-        // Si l'en-tête est absent ou ne commence pas par 'Bearer ', retourner une erreur
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
             return new JsonResponse(['error' => 'Token not provided or invalid.'], JsonResponse::HTTP_BAD_REQUEST);
         }
     
-        // Extraire le token du header 'Authorization'
-        $tokenString = substr($authHeader, 7); // 'Bearer ' fait 7 caractères
+        $tokenString = substr($authHeader, 7); 
     
-        // Rechercher le token dans la base de données
         $jwtToken = $em->getRepository(JwtToken::class)->findOneBy(['token' => $tokenString]);
     
-        // Si le token est trouvé, le supprimer
         if ($jwtToken) {
             $em->remove($jwtToken);
             $em->flush();
             
             return new JsonResponse(['message' => 'Successfully logged out.'], JsonResponse::HTTP_OK);
         } else {
-            // Si aucun token trouvé, retourner une erreur
             return new JsonResponse(['error' => 'Token not found in the database.'], JsonResponse::HTTP_NOT_FOUND);
         }
     

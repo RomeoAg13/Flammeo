@@ -12,9 +12,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends AbstractController
 {
-    #[Route('/home', name: 'homepage')]
+    #[Route('/', name: 'homepage')]
     public function homepage(ProductRepository $productRepository): Response
     {
+        //recuperer le token depuis le header... 
         $products = $productRepository->findAll();
         return $this->render('homepage/index.html.twig', [
             'controller_name' => 'ProductController',
@@ -47,13 +48,11 @@ class ProductController extends AbstractController
         $name = $data['name'];
         $price = $data['price'];
 
-        /* Verifier si le produit existe*/
         $product = $productRepository->find($id);
         if ($product){
             $product->setName($name);
             $product->setPrice($price);
 
-            /* mise a jour des valeurs */
             $entityManager->flush();
 
         }
@@ -82,7 +81,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/cart', name: 'cart_list')]
+    #[Route('/app/cart', name: 'cart_list')]
     public function cart(ProductRepository $productRepository, SessionInterface $session): Response
     {
         $cart = $session->get('cart', []);
@@ -98,7 +97,7 @@ class ProductController extends AbstractController
         ]);
     }
     
-    #[Route('/cart/add/{id}', name: 'cart_add')]
+    #[Route('/app/cart/add/{id}', name: 'cart_add')]
     public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
     {
         $product = $productRepository->find($id);
@@ -113,7 +112,7 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('cart_list');
     }
 
-    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    #[Route('/app/cart/remove/{id}', name: 'cart_remove')]
     public function removeFromCart(int $id, SessionInterface $session): Response
     {
         $cart = $session->get('cart', []);
