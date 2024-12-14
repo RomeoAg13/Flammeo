@@ -112,7 +112,6 @@ footer {
     flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
-    max-width: 1235px;
     padding: 20px;
 }
 
@@ -156,7 +155,7 @@ footer {
 /* Style pour l'image */
 .example-wrapper li img {
     width: 100%;
-    height: auto;
+    height: 55%;
     border-bottom: 1px solid #ddd;
     transition: transform 0.3s ease;
 }

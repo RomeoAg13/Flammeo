@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\JwtToken;
 use App\Form\UserType;
+use App\Form\LoginUserType;
 use App\Repository\UserRepository;
 use App\Service\JwtService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,25 +58,44 @@ public function new(
     #[Route('/login', name: 'login_form', methods: ['GET'])]
     public function loginForm(): Response
     {
-        return $this->render('login/index.html.twig'); 
+        $form = $this->createForm(LoginUserType::class);
+
+        return $this->render('login/index.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    #[Route('/login', name: 'login', methods: ['POST'])]
-    public function login(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordEncoder, JwtService $jwtService, EntityManagerInterface $em): Response {
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-        $user = $userRepository->findOneBy(['email' => $email]);
-
-    if (!$user || !$passwordEncoder->isPasswordValid($user, $password)) {
-        return new JsonResponse(['error' => 'Invalid credentials.'], JsonResponse::HTTP_UNAUTHORIZED);
+    #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
+    public function login(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordEncoder, JwtService $jwtService): Response
+    {
+        $form = $this->createForm(LoginUserType::class);
+    
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $form->get('email')->getData();
+            $password = $form->get('password')->getData();
+    
+            $user = $userRepository->findOneBy(['email' => $email]);
+    
+            if (!$user || !$passwordEncoder->isPasswordValid($user, $password)) {
+                $this->addFlash('error', 'Identifiants invalides.');
+                return $this->redirectToRoute('login_form');
+            }
+    
+            $token = $jwtService->createToken($user);
+            $tokenString = $token->toString();
+    
+            $this->addFlash('success', 'Connexion réussie');
+            return $this->redirectToRoute('homepage');
+        }
+    
+        return $this->render('login/index.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
+    
 
-    $token = $jwtService->createToken($user);
-    $tokenString = $token->toString();
-    $request->headers->set('Authorization', 'Bearer ' . $tokenString);
-
-    return $this->redirectToRoute('homepage');
-}
 
     #[Route('/login_success', name: 'login_success')]
     public function log_success(): Response
@@ -86,7 +106,7 @@ public function new(
     #[Route('/logout', name: 'logout_form', methods: ['GET'])]
     public function logoutForm(): Response
     {
-        return $this->redirectToRoute('login_form');
+        return $this->redirectToRoute('homepage');
     }
     #[Route('/logout', name: 'logout', methods: ['POST'])]
     public function logout(Request $request, EntityManagerInterface $em): JsonResponse
