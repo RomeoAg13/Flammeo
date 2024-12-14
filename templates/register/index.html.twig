@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block body %}
     <style>
@@ -12,22 +12,27 @@
             margin-top: 40px;
         }
 
-        .exemple-wrapper {
-            justify-content: center;
+        .example-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  width: 25%;
+  background-color: white;
+  border-radius: 25px;
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+        .form-container {
             display: flex;
-            margin-top:30px;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 93vh;
         }
 
-        /* Style du formulaire */
-        form {
-            background-color: #ffffff;
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 450px;
-            box-sizing: border-box;
-        }
+
 
         /* Espacement entre les éléments du formulaire */
         form div {
@@ -73,7 +78,10 @@
 
 
 
-    <div class="exemple-wrapper">
+
+<div class="form-container">
+    <div class="example-wrapper">
+    <h1>Register</h1>
         {{ form_start(form) }}
         {{ form_row(form.name, {'attr': {'placeholder': 'Enter your name'}}) }}
         {{ form_row(form.email, {'attr': {'placeholder': 'Enter your email'}}) }}
@@ -81,6 +89,7 @@
 
         <button type="submit" class="btn-custom">REGISTER</button>
         {{ form_end(form) }}
+    </div>
     </div>
 
 {% endblock %}

@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    
+    {% block stylesheets %}
+    {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/"><img id="logo" class="white-filter" src="{{ asset('images/image.png') }}"></a></li>
-                <li><a href="/products">All products</a></li>
-                <li><a href="/cart">Cart</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{{ path('homepage') }}">Home</a></li>
+            <li><a href="{{ path('all_product_list') }}">All Games</a></li>
+            <li><a href="{{ path('cart_list') }}">Cart</a></li>
+            {% if app.user %}
+                <li>{{ app.user.username }}</li>
+                <li><a href="{{ path('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ path('login_form') }}">Login</a></li>
+                <li><a href="{{ path('user_new') }}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
-            </ul>
-        </nav>
-    </header>
-        {% block body %}{% endblock %}
-    </body>
-    <footer>
-        <p>© 2024 Flameo, all rights reserved</p>
-    </footer>
+{% block body %}{% endblock %}
+
+</body>
+<footer>
+    <p>© 2024 Flameo, all rights reserved</p>
+</footer>
 </html>

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function homepage(ProductRepository $productRepository): Response
+    public function homepage(ProductRepository $productRepository, Request $request): Response
     {
         $products = $productRepository->findAll();
         return $this->render('homepage/index.html.twig', [
@@ -47,13 +47,11 @@ class ProductController extends AbstractController
         $name = $data['name'];
         $price = $data['price'];
 
-        /* Verifier si le produit existe*/
         $product = $productRepository->find($id);
         if ($product){
             $product->setName($name);
             $product->setPrice($price);
 
-            /* mise a jour des valeurs */
             $entityManager->flush();
 
         }
@@ -82,9 +80,10 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/cart', name: 'cart_list')]
-    public function cart(ProductRepository $productRepository, SessionInterface $session): Response
+    /*#[Route('/app/cart', name: 'cart_list')]
+    public function cart(ProductRepository $productRepository, SessionInterface $session, Request $request): Response
     {
+        $token = $request->headers->get('token');
         $cart = $session->get('cart', []);
         $products = $productRepository->findBy(['id' => $cart]);
         $totalPrice = 0;
@@ -93,21 +92,56 @@ class ProductController extends AbstractController
         }
         return $this->render('cart/index.html.twig', [
             'controller_name' => 'ProductController',
+            'token' => $token,
             'products' => $products,
             'totalPrice' => $totalPrice
         ]);
     }
-
-    #[Route('/login', name: 'login')]
-    public function login(ProductRepository $productRepository): Response
+    
+    #[Route('/app/cart/add/{id}', name: 'cart_add')]
+    public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
     {
-        $products = $productRepository->findAll();
-        return $this->render('login/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $products
-        ]);
+        $product = $productRepository->find($id);
+        if (!$product) {
+            throw $this->createNotFoundException("The product doesn't exists");
+        }
+        $cart = $session->get('cart', []);
+        if (!in_array($id, $cart)) {
+            $cart[] = $id;
+        }
+        $session->set('cart', $cart);
+        return $this->redirectToRoute('cart_list');
     }
 
+    #[Route('/app/cart/remove/{id}', name: 'cart_remove')]
+    public function removeFromCart(int $id, SessionInterface $session): Response
+    {
+        $cart = $session->get('cart', []);
+        if (($key = array_search($id, $cart)) !== false) {
+            unset($cart[$key]);
+        }
+        $session->set('cart', array_values($cart));
+        return $this->redirectToRoute('cart_list');
+    }*/
+
+    #[Route('/cart', name: 'cart_list')]
+    public function cart(ProductRepository $productRepository, SessionInterface $session, Request $request): Response
+    {
+        $token = $request->headers->get('token');
+        $cart = $session->get('cart', []);
+        $products = $productRepository->findBy(['id' => $cart]);
+        $totalPrice = 0;
+        foreach ($products as $product) {
+            $totalPrice += $product->getPrice();
+        }
+        return $this->render('cart/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'token' => $token,
+            'products' => $products,
+            'totalPrice' => $totalPrice
+        ]);
+    }
+    
     #[Route('/cart/add/{id}', name: 'cart_add')]
     public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
     {

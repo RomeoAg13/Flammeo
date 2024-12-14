@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}Flammeo | Produits{% endblock %}
 
 {% block body %}
     <style>
@@ -12,7 +12,7 @@
 
         <ul class="product-card">
             {% for product in products %}
-                <li>
+                <li style="margin:20px">
                     <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
                     <div class="product-name">{{ product.getName() }}</div>
                     <div class="product-price">{{ product.getPrice() }}€</div>

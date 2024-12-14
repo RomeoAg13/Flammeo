@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface; // Ajout du use
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements PasswordAuthenticatedUserInterface  // Implémentation de l'interface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,12 +28,12 @@ class User
         return $this->id;
     }
 
-    public function getname(): ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setname(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -44,19 +45,19 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): ?string  // Cette méthode doit retourner le mot de passe
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self  // Le setter
     {
         $this->password = $password;
 
