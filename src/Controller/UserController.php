@@ -72,7 +72,6 @@ public function new(
 
     $token = $jwtService->createToken($user);
     $tokenString = $token->toString();
-
     $request->headers->set('Authorization', 'Bearer ' . $tokenString);
 
     return $this->redirectToRoute('homepage');

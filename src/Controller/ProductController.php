@@ -15,12 +15,9 @@ class ProductController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function homepage(ProductRepository $productRepository, Request $request): Response
     {
-        //recuperer le token depuis le header... 
-        $token = $request->headers->get('token');
         $products = $productRepository->findAll();
         return $this->render('homepage/index.html.twig', [
             'controller_name' => 'ProductController',
-            'token' => $token,
             'products' => $products
         ]);
     }
@@ -83,9 +80,10 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/app/cart', name: 'cart_list')]
-    public function cart(ProductRepository $productRepository, SessionInterface $session): Response
+    /*#[Route('/app/cart', name: 'cart_list')]
+    public function cart(ProductRepository $productRepository, SessionInterface $session, Request $request): Response
     {
+        $token = $request->headers->get('token');
         $cart = $session->get('cart', []);
         $products = $productRepository->findBy(['id' => $cart]);
         $totalPrice = 0;
@@ -94,6 +92,7 @@ class ProductController extends AbstractController
         }
         return $this->render('cart/index.html.twig', [
             'controller_name' => 'ProductController',
+            'token' => $token,
             'products' => $products,
             'totalPrice' => $totalPrice
         ]);
@@ -115,6 +114,50 @@ class ProductController extends AbstractController
     }
 
     #[Route('/app/cart/remove/{id}', name: 'cart_remove')]
+    public function removeFromCart(int $id, SessionInterface $session): Response
+    {
+        $cart = $session->get('cart', []);
+        if (($key = array_search($id, $cart)) !== false) {
+            unset($cart[$key]);
+        }
+        $session->set('cart', array_values($cart));
+        return $this->redirectToRoute('cart_list');
+    }*/
+
+    #[Route('/cart', name: 'cart_list')]
+    public function cart(ProductRepository $productRepository, SessionInterface $session, Request $request): Response
+    {
+        $token = $request->headers->get('token');
+        $cart = $session->get('cart', []);
+        $products = $productRepository->findBy(['id' => $cart]);
+        $totalPrice = 0;
+        foreach ($products as $product) {
+            $totalPrice += $product->getPrice();
+        }
+        return $this->render('cart/index.html.twig', [
+            'controller_name' => 'ProductController',
+            'token' => $token,
+            'products' => $products,
+            'totalPrice' => $totalPrice
+        ]);
+    }
+    
+    #[Route('/cart/add/{id}', name: 'cart_add')]
+    public function addToCart($id, ProductRepository $productRepository, SessionInterface $session): Response
+    {
+        $product = $productRepository->find($id);
+        if (!$product) {
+            throw $this->createNotFoundException("The product doesn't exists");
+        }
+        $cart = $session->get('cart', []);
+        if (!in_array($id, $cart)) {
+            $cart[] = $id;
+        }
+        $session->set('cart', $cart);
+        return $this->redirectToRoute('cart_list');
+    }
+
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
     public function removeFromCart(int $id, SessionInterface $session): Response
     {
         $cart = $session->get('cart', []);
