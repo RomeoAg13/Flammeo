@@ -12,20 +12,25 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends AbstractController
 {
+    
     #[Route('/', name: 'homepage')]
     public function homepage(ProductRepository $productRepository, Request $request): Response
     {
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         $products = $productRepository->findAll();
         return $this->render('homepage/index.html.twig', [
             'controller_name' => 'ProductController',
-            'products' => $products
+            'products' => $products,
+            'name' => $blase,
+            'connecte' => $connecte
         ]);
     }
 
     #[Route('/product/add', name: 'product_add', methods : ['POST'])]
     public function add(Request $request, ProductRepository $productRepository): Response
-    {
-
+    {	
         $data = json_decode($request->getContent(), associative:true);
 
         $name = $data['name'];
@@ -71,12 +76,17 @@ class ProductController extends AbstractController
 
 
     #[Route('/products', name: 'all_product_list')]
-    public function allProducts(ProductRepository $productRepository): Response
+    public function allProducts(ProductRepository $productRepository, Request $request): Response
     {
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         $products = $productRepository->findAll();
         return $this->render('product/index.html.twig', [
             'controller_name' => 'ProductController',
-            'products' => $products
+            'products' => $products,
+            'name' => $blase,
+            'connecte' => $connecte
         ]);
     }
 
@@ -127,6 +137,9 @@ class ProductController extends AbstractController
     #[Route('/cart', name: 'cart_list')]
     public function cart(ProductRepository $productRepository, SessionInterface $session, Request $request): Response
     {
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         $token = $request->headers->get('token');
         $cart = $session->get('cart', []);
         $products = $productRepository->findBy(['id' => $cart]);
@@ -138,7 +151,9 @@ class ProductController extends AbstractController
             'controller_name' => 'ProductController',
             'token' => $token,
             'products' => $products,
-            'totalPrice' => $totalPrice
+            'totalPrice' => $totalPrice,
+            'name' => $blase,
+            'connecte' => $connecte
         ]);
     }
     
@@ -160,6 +175,7 @@ class ProductController extends AbstractController
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
     public function removeFromCart(int $id, SessionInterface $session): Response
     {
+        $session = $request->getSession();
         $cart = $session->get('cart', []);
         if (($key = array_search($id, $cart)) !== false) {
             unset($cart[$key]);

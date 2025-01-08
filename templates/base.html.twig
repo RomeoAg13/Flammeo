@@ -19,8 +19,8 @@
             <li><a href="{{ path('homepage') }}">Home</a></li>
             <li><a href="{{ path('all_product_list') }}">All Games</a></li>
             <li><a href="{{ path('cart_list') }}">Cart</a></li>
-            {% if app.user %}
-                <li>{{ app.user.username }}</li>
+            {% if connecte %}
+                <li>Welcome, {{ name }}</li>
                 <li><a href="{{ path('logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ path('login_form') }}">Login</a></li>

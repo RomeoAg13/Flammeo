@@ -12,6 +12,7 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            stateless: false
 
         login:
             pattern: ^/login
@@ -19,7 +20,7 @@ security:
 
         home:
             pattern: ^/home
-            stateless: true
+            stateless: false
 
         app:
             pattern: ^/app

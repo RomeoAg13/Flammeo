@@ -17,12 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
+    
     #[Route('/register', name: 'user_new')]
 public function new(
     Request $request,
     EntityManagerInterface $entityManager,
     UserPasswordHasherInterface $passwordHasher
 ): Response {
+    $session = $request->getSession();
+    $blase = $session->get('name');
+    $connecte = $session->get('connecte');	
     $user = new User();
     $form = $this->createForm(UserType::class, $user);
     $form->handleRequest($request);
@@ -45,29 +49,47 @@ public function new(
 
     return $this->render('register/index.html.twig', [
         'form' => $form->createView(),
+        'name' => $blase,
+        'connecte' => $connecte
     ]);
 }
 
 
     #[Route('/register_success', name: 'register_success')]
-    public function success(): Response
+    public function success(Request $request): Response
     {
-        return $this->render('register/success.html.twig');
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
+        return $this->render('register/success.html.twig', [
+            'name' => $blase,
+            'connecte' => $connecte
+        ]);
     }
 
     #[Route('/login', name: 'login_form', methods: ['GET'])]
-    public function loginForm(): Response
+    public function loginForm(Request $request): Response
     {
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         $form = $this->createForm(LoginUserType::class);
-
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         return $this->render('login/index.html.twig', [
             'form' => $form->createView(),
+            'name' => $blase,
+            'connecte' => $connecte
         ]);
     }
 
     #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
     public function login(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordEncoder, JwtService $jwtService): Response
     {
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
         $form = $this->createForm(LoginUserType::class);
     
         $form->handleRequest($request);
@@ -85,27 +107,43 @@ public function new(
     
             $token = $jwtService->createToken($user);
             $tokenString = $token->toString();
-    
+
+            $userNom = $user->getName(); 
+            //$userPrenom = $user->getPrenom();
+            $session = $request->getSession();
+            $session->set('name', $userNom);
+            $session->set('connecte', true);
             $this->addFlash('success', 'Connexion réussie');
             return $this->redirectToRoute('homepage');
         }
     
         return $this->render('login/index.html.twig', [
             'form' => $form->createView(),
+            'name' => $blase,
+            'connecte' => $connecte
         ]);
     }
     
 
 
     #[Route('/login_success', name: 'login_success')]
-    public function log_success(): Response
+    public function log_success(Request $request): Response
     {
-        return $this->render('login/success.html.twig');
+        $session = $request->getSession();
+        $blase = $session->get('name');
+        $connecte = $session->get('connecte');	
+        return $this->render('login/success.html.twig', [
+            'name' => $blase,
+            'connecte' => $connecte
+        ]);
     }
 
     #[Route('/logout', name: 'logout_form', methods: ['GET'])]
-    public function logoutForm(): Response
+    public function logoutForm(Request $request): Response
     {
+        $session = $request->getSession();
+        $session->remove('name');
+        $session->set('connecte', false);
         return $this->redirectToRoute('homepage');
     }
     #[Route('/logout', name: 'logout', methods: ['POST'])]
@@ -117,7 +155,6 @@ public function new(
         }
     
         $tokenString = substr($authHeader, 7); 
-    
         $jwtToken = $em->getRepository(JwtToken::class)->findOneBy(['token' => $tokenString]);
     
         if ($jwtToken) {
