@@ -23,9 +23,11 @@ header {
 /* Style du menu de navigation */
 nav ul {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     list-style: none;
+    width: 80%;
+    margin: auto;    
 }
 
 /* Style de chaque élément de menu */

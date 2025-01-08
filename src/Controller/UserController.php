@@ -146,6 +146,7 @@ public function new(
         $session->set('connecte', false);
         return $this->redirectToRoute('homepage');
     }
+    
     #[Route('/logout', name: 'logout', methods: ['POST'])]
     public function logout(Request $request, EntityManagerInterface $em): JsonResponse
     {

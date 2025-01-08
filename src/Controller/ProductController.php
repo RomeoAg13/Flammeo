@@ -173,7 +173,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
-    public function removeFromCart(int $id, SessionInterface $session): Response
+    public function removeFromCart(int $id, SessionInterface $session, Request $request): Response
     {
         $session = $request->getSession();
         $cart = $session->get('cart', []);
