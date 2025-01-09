@@ -103,14 +103,19 @@ class ProductController extends AbstractController
         foreach ($products as $product) {
             $totalPrice += $product->getPrice();
         }
-        return $this->render('cart/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'token' => $token,
-            'products' => $products,
-            'totalPrice' => $totalPrice,
-            'name' => $blase,
-            'connecte' => $connecte
-        ]);
+        if ($connecte) {
+            return $this->render('cart/index.html.twig', [
+                'controller_name' => 'ProductController',
+                'token' => $token,
+                'products' => $products,
+                'totalPrice' => $totalPrice,
+                'name' => $blase,
+                'connecte' => $connecte
+            ]);
+        } else {
+           return $this->redirectToRoute('login');
+        }
+        
     }
     
     #[Route('/cart/add/{id}', name: 'cart_add')]
