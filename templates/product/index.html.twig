@@ -19,6 +19,9 @@
                     <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn-primary">
                         Add to cart
                     </a>
+                    <a href="{{ path('detail_game', {id: product.getId()}) }}" class="btn-primary">
+                        Details
+                    </a>
                 </li>
             {% endfor %}
         </ul>

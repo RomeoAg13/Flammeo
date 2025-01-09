@@ -3,25 +3,23 @@
 {% block title %}Flammeo | Homepage{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper {  width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
     <div class="example-wrapper">
         <h1>Our Best Games !</h1>
 
         <ul>
             {% for product in products|slice(products|length - 5, products|length) %}
-    <li style="margin:20px">
-        <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
-        <div class="product-name">{{ product.getName() }}</div>
-        <div class="product-price">{{ product.getPrice() }}€</div>
-        <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn-primary">
-            Add to cart
-        </a>
-    </li>
-{% endfor %}
+                <li class="game-card" style="margin:20px">
+                    <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
+                    <div class="product-name">{{ product.getName() }}</div>
+                    <div class="product-price">{{ product.getPrice() }}€</div>
+                    <a href="{{ path('cart_add', {id: product.getId()}) }}" class="btn-primary">
+                        Add to cart
+                    </a>
+                    <a href="{{ path('detail_game', {id: product.getId()}) }}" class="btn-primary">
+                        Details
+                    </a>
+                </li>
+            {% endfor %}
         </ul>
     </div>
-
 {% endblock %}

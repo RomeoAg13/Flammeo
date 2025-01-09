@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du produit{% endblock %}
+
+{% block stylesheets %}
+<style>
+
+
+/* Conteneur du produit */
+.product-container {
+    max-width: 500px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-container img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.product-container h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.product-container p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Boutons */
+.product-container a {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.product-container a:hover {
+    background-color: #0056b3;
+}
+
+/* Style des cartes produits */
+.product-card {
+    width: 300px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+.product-card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.product-card h2 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #333;
+}
+
+.product-card p {
+    font-size: 16px;
+    color: #666;
+}
+
+.product-card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    color: white;
+    background-color: #28a745;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.product-card a:hover {
+    background-color: #218838;
+}
+
+</style>{% endblock %}
+
+{% block body %}
+    <div class="product-container">
+        <img src="{{ product.getImage() }}" alt="{{ product.getName() }}">
+        <h1>{{ product.getName() }}</h1>
+        <p>Prix: {{ product.getPrice() }} €</p>
+
+        <a href="{{ path('cart_add', { id: product.getId() }) }}">Ajouter au panier</a>
+        <br>
+        <a href="{{ path('homepage') }}">Retour à l'accueil</a>
+    </div>
+{% endblock %}
